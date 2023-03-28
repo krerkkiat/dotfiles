@@ -1,7 +1,10 @@
 #!/bin/env python
 import subprocess
+from pathlib import Path
+import os
 
 def setup_git_alias():
+    print("configuring: git aliases")
     subprocess.run("""
 git config --global alias.co 'checkout'
 git config --global alias.st 'status'
@@ -18,8 +21,33 @@ git config --global alias.lgoa 'log --graph --all --decorate --oneline'
 git config --global alias.hs "log --pretty='%C(yellow)%h %C(cyan)%ad %Cblue%an%C(auto)%d %Creset%s' --date=relative --date-order --graph"
     """, shell=True)
 
+KNOWN_DOTBASHRC_PATH = Path(os.environ["HOME"]) / ".bashrc"
+
+def patch_dotbashrc():
+    print("patching: .bashrc")
+    if KNOWN_DOTBASHRC_PATH.exists():
+        print(f"found .bashrc at {str(KNOWN_DOTBASHRC_PATH)}")
+        lines = []
+        with open(KNOWN_DOTBASHRC_PATH, "r") as in_f:
+            lines = in_f.readlines()
+        
+        processed_lines = []
+        for line in lines:
+            if line.startswith("""    PS1="${userpart} ${lightblue}\\w ${gitbranch}${removeco"""):
+                print("found line")
+                processed_lines.append('    PS1="${userpart} ${lightblue}\\w ${gitbranch}${removecolor}\n\\$ "\n')
+            else:
+                processed_lines.append(line)
+
+        with open(KNOWN_DOTBASHRC_PATH, "w") as out_f:
+            for l in processed_lines:
+                out_f.write(l)
+
+
+
 def main():
     setup_git_alias()
+    patch_dotbashrc()
 
 if __name__ == "__main__":
     main()
