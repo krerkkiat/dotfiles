@@ -1,0 +1,25 @@
+#!/bin/env python
+import subprocess
+
+def setup_git_alias():
+    subprocess.run("""
+git config --global alias.co 'checkout'
+git config --global alias.st 'status'
+git config --global alias.sw 'switch'
+git config --global alias.br 'branch'
+git config --global alias.ds 'diff --staged'
+git config --global alias.fl 'log -u'
+git config --global alias.flog 'log --graph --all --decorate'
+git config --global alias.lgo1d 'log --graph --all --decorate --oneline --since yesterday'
+git config --global alias.lgo3d "log --graph --all --decorate --oneline --since='3 days ago'"
+git config --global alias.lgo1w "log --graph --all --decorate --oneline --since='7 days ago'"
+git config --global alias.lgo4w "log --graph --all --decorate --oneline --since='4 weeks ago'"
+git config --global alias.lgoa 'log --graph --all --decorate --oneline'
+git config --global alias.hs "log --pretty='%C(yellow)%h %C(cyan)%ad %Cblue%an%C(auto)%d %Creset%s' --date=relative --date-order --graph"
+    """, shell=True)
+
+def main():
+    setup_git_alias()
+
+if __name__ == "__main__":
+    main()
