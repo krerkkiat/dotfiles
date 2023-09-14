@@ -44,10 +44,13 @@ def patch_dotbashrc():
                 out_f.write(l)
 
 
-
 def main():
     setup_git_alias()
-    patch_dotbashrc()
+
+    # Only apply the patch if in GitHub Codespaces.
+    if not os.environ.get("CODESPACES", None) is None:
+        patch_dotbashrc()
+
 
 if __name__ == "__main__":
     main()
